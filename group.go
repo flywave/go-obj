@@ -6,6 +6,11 @@ func FillIntSlice(slice []int, val int) {
 	}
 }
 
+type faceGroup struct {
+	Offset int
+	Size   int
+}
+
 type group struct {
 	Name           string
 	FirstFaceIndex int

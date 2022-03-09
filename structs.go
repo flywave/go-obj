@@ -227,12 +227,13 @@ func (f *face) Triangulate(V []vec3.T) [][]faceCorner {
 type ObjBuffer struct {
 	activeMaterial string
 
-	MTL string
-	V   []vec3.T
-	VN  []vec3.T
-	VT  []vec2.T
-	F   []face
-	G   []group
+	MTL       string
+	V         []vec3.T
+	VN        []vec3.T
+	VT        []vec2.T
+	F         []face
+	G         []group
+	FaceGroup []*faceGroup
 }
 
 func (b *ObjBuffer) BoundingBox() vec3.Box {

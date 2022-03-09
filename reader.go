@@ -78,6 +78,13 @@ func (l *ObjReader) Read(reader io.Reader) error {
 		case "mtllib":
 			err = l.processMaterialLibrary(line)
 		case "usemtl":
+			fsz := len(l.F)
+			if len(l.FaceGroup) > 0 {
+				fg := l.FaceGroup[len(l.FaceGroup)-1]
+				fg.Size = fsz - fg.Offset
+			}
+			ng := &faceGroup{Offset: fsz}
+			l.FaceGroup = append(l.FaceGroup, ng)
 			err = l.processUseMaterial(line)
 		case "o":
 		case "s":
@@ -93,6 +100,10 @@ func (l *ObjReader) Read(reader io.Reader) error {
 		}
 	}
 	l.endGroup()
+	if len(l.FaceGroup) > 0 {
+		fg := l.FaceGroup[len(l.FaceGroup)-1]
+		fg.Size = len(l.F) - fg.Offset
+	}
 	return scanner.Err()
 }
 
