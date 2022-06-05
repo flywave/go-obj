@@ -4,8 +4,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/flywave/go3d/vec3"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestObjReader_ProcessMaterialLibrary_InvalidLine_ReturnsError(t *testing.T) {

@@ -24,6 +24,11 @@ type faceCorner struct {
 	TexcoordIndex int
 }
 
+type line struct {
+	Corners  []int
+	Material string
+}
+
 type face struct {
 	Corners  []faceCorner
 	Material string
@@ -232,6 +237,7 @@ type ObjBuffer struct {
 	VN        []vec3.T
 	VT        []vec2.T
 	F         []face
+	L         []line
 	G         []group
 	FaceGroup []*faceGroup
 }

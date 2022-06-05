@@ -73,6 +73,8 @@ func (l *ObjReader) Read(reader io.Reader) error {
 			err = l.processVertexNormal(fields[1:])
 		case "f":
 			err = l.processFace(fields[1:])
+		case "l":
+			err = l.processLine(fields[1:])
 		case "g":
 			err = l.processGroup(line)
 		case "mtllib":
@@ -182,6 +184,22 @@ func (l *ObjReader) isFaceAccepted(f *face) bool {
 		}
 	}
 	return true
+}
+
+func (l *ObjReader) processLine(fields []string) error {
+	if len(fields) < 2 {
+		return fmt.Errorf("Expected %d fields, but got %d", 2, len(fields))
+	}
+	ll := line{make([]int, len(fields)), l.activeMaterial}
+	for i, field := range fields {
+		corner, err := strconv.Atoi(field)
+		if err != nil {
+			return err
+		}
+		ll.Corners[i] = corner
+	}
+	l.L = append(l.L, ll)
+	return nil
 }
 
 func (l *ObjReader) processFace(fields []string) error {
