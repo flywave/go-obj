@@ -196,7 +196,7 @@ func (l *ObjReader) processLine(fields []string) error {
 		if err != nil {
 			return err
 		}
-		ll.Corners[i] = corner
+		ll.Corners[i] = corner - 1
 	}
 	l.L = append(l.L, ll)
 	return nil

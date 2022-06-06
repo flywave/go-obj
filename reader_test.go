@@ -1,6 +1,7 @@
 package obj
 
 import (
+	"encoding/json"
 	"os"
 	"testing"
 
@@ -220,4 +221,34 @@ func TestLoadObj(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+}
+
+func TestLoadLineObj(t *testing.T) {
+	loader := ObjReader{}
+	file, err := os.Open("./line.obj")
+	if err != nil {
+		t.Error(err)
+	}
+
+	err = loader.Read(file)
+	if err != nil {
+		t.Error(err)
+	}
+
+	wr := [][][3]float64{}
+	for i := range loader.L {
+		c := loader.L[i].Corners
+		p1 := loader.V[c[0]]
+		p2 := loader.V[c[1]]
+
+		wr = append(wr, [][3]float64{
+			[3]float64{float64(p1[0]), float64(p1[1]), float64(p1[2])},
+			[3]float64{float64(p2[0]), float64(p2[1]), float64(p2[2])},
+		})
+	}
+
+	data, _ := json.Marshal(wr)
+
+	os.WriteFile("./line.json", data, os.ModePerm)
+
 }
