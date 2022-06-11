@@ -103,6 +103,9 @@ func (l *ObjReader) Read(reader io.Reader) error {
 	if len(l.FaceGroup) > 0 {
 		fg := l.FaceGroup[len(l.FaceGroup)-1]
 		fg.Size = len(l.F) - fg.Offset
+	} else {
+		ng := &faceGroup{Offset: 0, Size: len(l.F)}
+		l.FaceGroup = append(l.FaceGroup, ng)
 	}
 	return scanner.Err()
 }
