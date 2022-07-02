@@ -252,3 +252,28 @@ func TestLoadLineObj(t *testing.T) {
 	os.WriteFile("./line.json", data, os.ModePerm)
 
 }
+
+func TestBBox(t *testing.T) {
+	loader := ObjReader{}
+	file, err := os.Open("./1_8.obj")
+	if err != nil {
+		t.Error(err)
+	}
+
+	err = loader.Read(file)
+	if err != nil {
+		t.Error(err)
+	}
+
+	bbox := loader.BoundingBox()
+	center := bbox.Center()
+
+	for i, v := range loader.V {
+		loader.V[i] = vec3.Sub(&v, &center)
+	}
+
+	f, _ := os.Create("./1_8_2.obj")
+
+	loader.Write(f)
+	f.Close()
+}
