@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/flywave/go3d/vec2"
 	"github.com/flywave/go3d/vec3"
 )
 
@@ -28,6 +29,9 @@ func (b *ObjBuffer) Write(w io.Writer) error {
 	if err = b.writeNormals(w); err != nil {
 		return err
 	}
+	if err = b.writeTexcoords(w); err != nil {
+		return err
+	}
 	for _, g := range b.G {
 		if err = b.writeGroup(w, g); err != nil {
 			return err
@@ -45,6 +49,10 @@ func (b *ObjBuffer) writeNormals(w io.Writer) error {
 	return writeVectors(w, "vn %g %g %g\n", b.VN)
 }
 
+func (b *ObjBuffer) writeTexcoords(w io.Writer) error {
+	return writeVectors2(w, "vt %g %g\n", b.VT)
+}
+
 func writeFace(w io.Writer, f face) error {
 	var err error
 
@@ -55,8 +63,16 @@ func writeFace(w io.Writer, f face) error {
 
 	for _, c := range f.Corners {
 		if c.NormalIndex != -1 {
+			if c.TexcoordIndex != -1 {
+				_, err = io.WriteString(w,
+					fmt.Sprintf(" %d/%d/%d", c.VertexIndex+1, c.TexcoordIndex+1, c.NormalIndex+1))
+			} else {
+				_, err = io.WriteString(w,
+					fmt.Sprintf(" %d//%d", c.VertexIndex+1, c.NormalIndex+1))
+			}
+		} else if c.TexcoordIndex != -1 {
 			_, err = io.WriteString(w,
-				fmt.Sprintf(" %d//%d", c.VertexIndex+1, c.NormalIndex+1))
+				fmt.Sprintf(" %d/%d", c.VertexIndex+1, c.TexcoordIndex+1))
 		} else {
 			_, err = io.WriteString(w, fmt.Sprintf(" %d", c.VertexIndex+1))
 		}
@@ -71,6 +87,16 @@ func writeFace(w io.Writer, f face) error {
 func writeVectors(w io.Writer, format string, vectors []vec3.T) error {
 	for _, v := range vectors {
 		_, err := io.WriteString(w, fmt.Sprintf(format, v[0], v[1], v[2]))
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func writeVectors2(w io.Writer, format string, vectors []vec2.T) error {
+	for _, v := range vectors {
+		_, err := io.WriteString(w, fmt.Sprintf(format, v[0], v[1]))
 		if err != nil {
 			return err
 		}

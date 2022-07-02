@@ -1,10 +1,12 @@
 package obj
 
 import (
+	"encoding/binary"
+	"io"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/flywave/go3d/vec3"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestObjBuffer_BoundingBox_NoVertices_ReturnsEmptyBox(t *testing.T) {
@@ -36,4 +38,8 @@ func TestObjBuffer_BoundingBox_ZeroNotIncludedInBounds_ReturnsCorrectBoundingBox
 	box := buffer.BoundingBox()
 
 	assert.Equal(t, vec3.Box{Min: vec3.T{1, 1, 1}, Max: vec3.T{2, 4, 5}}, box)
+}
+
+func readLittleByte(rd io.Reader, v interface{}) {
+	binary.Read(rd, binary.LittleEndian, v)
 }
