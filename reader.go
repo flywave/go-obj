@@ -127,8 +127,8 @@ func (l *ObjReader) processVertex(fields []string) error {
 }
 
 func (l *ObjReader) processVertexTexCoord(fields []string) error {
-	if len(fields) != 2 {
-		return fmt.Errorf("Expected 3 fields, but got %d", len(fields))
+	if len(fields) < 2 {
+		return fmt.Errorf("Expected 2 fields, but got %d", len(fields))
 	}
 	s, errS := strconv.ParseFloat(fields[0], 32)
 	t, errT := strconv.ParseFloat(fields[1], 32)
