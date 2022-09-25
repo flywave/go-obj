@@ -77,6 +77,8 @@ func ReadMaterials(filename string) (map[string]*Material, error) {
 			material.Diffuse = []float32{0.8, 0.8, 0.8, 1.0}
 			material.Specular = []float32{0.0, 0.0, 0.0, 1.0}
 			material.TransmissionFilter = []float32{1.0, 1.0, 1.0}
+			material.Emissive = []float32{0.1, 0.1, 0.1, 1.0}
+
 			material.Opacity = 1
 			materials[material.Name] = material
 
@@ -130,7 +132,9 @@ func ReadMaterials(filename string) (map[string]*Material, error) {
 				if err != nil {
 					return nil, fail("cannot parse float")
 				}
-				material.Emissive[i] = float32(f)
+				if f != 0 {
+					material.Emissive[i] = float32(f)
+				}
 			}
 		case "Ns":
 			if len(fields) != 2 {
