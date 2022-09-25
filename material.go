@@ -144,7 +144,7 @@ func ReadMaterials(filename string) (map[string]*Material, error) {
 			if err != nil {
 				return nil, fail("cannot parse float")
 			}
-			material.Shininess = float64(f / 1000 * 128)
+			material.Shininess = float64(f / 1000)
 		case "d":
 			if len(fields) != 2 {
 				return nil, fail("unsupported transparency line")
