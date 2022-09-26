@@ -280,5 +280,33 @@ func WalkDir(dir string) {
 
 func TestBBox(t *testing.T) {
 
-	WalkDir("./model/zhuitong")
+	WalkDir("./model/deng")
+	WalkDir("./model/deng2")
+	WalkDir("./model/ludeng")
+	WalkDir("./model/other")
+}
+
+func TestBBox2(t *testing.T) {
+	loader := ObjReader{}
+	file, err := os.Open("./model/other/a.obj")
+	if err != nil {
+		t.Error(err)
+	}
+
+	err = loader.Read(file)
+	if err != nil {
+		t.Error(err)
+	}
+
+	bbox := loader.BoundingBox()
+	center := bbox.Center()
+
+	for i, v := range loader.V {
+		loader.V[i] = vec3.Sub(&v, &center)
+	}
+
+	f, _ := os.Create("./model/other/a.obj")
+
+	loader.Write(f)
+	f.Close()
 }
