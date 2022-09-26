@@ -77,7 +77,7 @@ func ReadMaterials(filename string) (map[string]*Material, error) {
 			material.Diffuse = []float32{0.8, 0.8, 0.8, 1.0}
 			material.Specular = []float32{0.0, 0.0, 0.0, 1.0}
 			material.TransmissionFilter = []float32{1.0, 1.0, 1.0}
-			material.Emissive = []float32{0.04, 0.04, 0.04, 1.0}
+			material.Emissive = []float32{0.2, 0.2, 0.2, 1.0}
 
 			material.Opacity = 1
 			materials[material.Name] = material
