@@ -2,11 +2,16 @@ package obj
 
 import (
 	"encoding/json"
+	"image"
+	"image/png"
+	"math"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 	"testing"
 
+	"github.com/flywave/go3d/vec2"
 	"github.com/flywave/go3d/vec3"
 	"github.com/stretchr/testify/assert"
 )
@@ -263,7 +268,7 @@ func WalkDir(dir string) {
 			loader.Read(file)
 
 			for i := range loader.V {
-				loader.V[i].Scale(0.01)
+				loader.V[i].Scale(10)
 			}
 
 			f, _ := os.Create(fname)
@@ -277,15 +282,12 @@ func WalkDir(dir string) {
 
 func TestBBox(t *testing.T) {
 
-	WalkDir("./model/deng")
-	WalkDir("./model/deng2")
-	WalkDir("./model/ludeng")
-	WalkDir("./model/other")
+	WalkDir("./model")
 }
 
 func TestBBox2(t *testing.T) {
 	loader := ObjReader{}
-	file, err := os.Open("./model/other/a2.obj")
+	file, err := os.Open("./aa.obj")
 	if err != nil {
 		t.Error(err)
 	}
@@ -299,8 +301,87 @@ func TestBBox2(t *testing.T) {
 		loader.V[i].Scale(0.01)
 	}
 
-	f, _ := os.Create("./model/other/a21.obj")
+	f, _ := os.Create("./aa.obj")
 
 	loader.Write(f)
 	f.Close()
+}
+
+func WalkDirTexture(dir string) {
+	filepath.Walk(dir, func(fname string, fi os.FileInfo, err error) error {
+		if !fi.IsDir() && strings.HasSuffix(fname, ".obj") {
+			loader := ObjReader{}
+			file, _ := os.Open(fname)
+			loader.Read(file)
+
+			tb := vec2.Rect{Min: vec2.MaxVal, Max: vec2.MinVal}
+
+			for i := range loader.VT {
+				tb.Extend(&loader.VT[i])
+			}
+
+			mtlName := strings.ReplaceAll(fname, ".obj", ".mtl")
+
+			mtls, _ := ReadMaterials(mtlName)
+
+			var mtl *Material
+			for _, mtl = range mtls {
+				break
+			}
+
+			if mtl != nil {
+				texName := mtl.DiffuseTexture
+				texPath := path.Join(path.Dir(fname), texName)
+				tfile, _ := os.Open(texPath)
+				img, _ := png.Decode(tfile)
+
+				rect := img.Bounds()
+				w := rect.Dx()
+				h := rect.Dy()
+
+				x0, y0 := int(math.Ceil(float64(float32(w)*tb.Min[0]))), int(math.Ceil(float64(float32(h)*(1-tb.Max[1]))))
+				newW, newH := int(math.Ceil(float64(float32(w)*(tb.Max[0]-tb.Min[0])))), int(math.Ceil(float64(float32(h)*(tb.Max[1]-tb.Min[1]))))
+
+				newImage := image.NewRGBA(image.Rect(0, 0, int(newW), int(newH)))
+
+				if newImage != nil {
+					for x := 0; x < int(newW); x++ {
+						for y := 0; y < int(newH); y++ {
+							c := img.At(x0+x, y0+y)
+							newImage.Set(x, y, c)
+						}
+					}
+				}
+
+				pngName := strings.ReplaceAll(fname, ".obj", ".png")
+
+				fnew, _ := os.Create(pngName)
+
+				png.Encode(fnew, newImage)
+
+				mtl.DiffuseTexture = strings.ReplaceAll(filepath.Base(fname), ".obj", ".png")
+			}
+
+			WriteMaterials(mtlName, mtls)
+
+			length := vec2.Sub(&tb.Max, &tb.Min)
+
+			for i := range loader.VT {
+				loader.VT[i].Sub(&tb.Min)
+				loader.VT[i][0] = loader.VT[i][0] / length[0]
+				loader.VT[i][1] = loader.VT[i][1] / length[1]
+			}
+
+			f, _ := os.Create(fname)
+
+			loader.Write(f)
+			f.Close()
+		}
+		return nil
+	})
+}
+
+func TestProssTexture(t *testing.T) {
+
+	WalkDirTexture("./model")
 }

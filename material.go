@@ -432,13 +432,13 @@ func WriteMaterials(filename string, mtls map[string]*Material) error {
 		}
 	}
 
-	file, err := os.Open(filename)
+	file, err := os.Create(filename)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
 
-	_, err = file.Write(ret)
+	_, err = file.Write(buff.Bytes())
 	if err != nil {
 		return err
 	}
