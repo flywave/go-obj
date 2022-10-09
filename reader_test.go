@@ -262,8 +262,11 @@ func WalkDir(dir string) {
 			file, _ := os.Open(fname)
 			loader.Read(file)
 
-			for i := range loader.V {
-				loader.V[i].Scale(0.01)
+			bbox := loader.BoundingBox()
+			center := bbox.Center()
+
+			for i, v := range loader.V {
+				loader.V[i] = vec3.Sub(&v, &center)
 			}
 
 			f, _ := os.Create(fname)
@@ -276,11 +279,7 @@ func WalkDir(dir string) {
 }
 
 func TestBBox(t *testing.T) {
-
-	WalkDir("./model/deng")
-	WalkDir("./model/deng2")
-	WalkDir("./model/ludeng")
-	WalkDir("./model/other")
+	WalkDir("/home/hj/snap/dukto/16/obj")
 }
 
 func TestBBox2(t *testing.T) {
@@ -295,8 +294,11 @@ func TestBBox2(t *testing.T) {
 		t.Error(err)
 	}
 
-	for i := range loader.V {
-		loader.V[i].Scale(0.01)
+	bbox := loader.BoundingBox()
+	center := bbox.Center()
+
+	for i, v := range loader.V {
+		loader.V[i] = vec3.Sub(&v, &center)
 	}
 
 	f, _ := os.Create("./model/other/a21.obj")
