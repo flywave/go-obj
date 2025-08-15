@@ -53,7 +53,7 @@ func (b *ObjBuffer) writeTexcoords(w io.Writer) error {
 	return writeVectors2(w, "vt %g %g\n", b.VT)
 }
 
-func writeFace(w io.Writer, f face) error {
+func writeFace(w io.Writer, f Face) error {
 	var err error
 
 	_, err = io.WriteString(w, "f")
@@ -104,7 +104,7 @@ func writeVectors2(w io.Writer, format string, vectors []vec2.T) error {
 	return nil
 }
 
-func (b *ObjBuffer) writeGroup(w io.Writer, g group) error {
+func (b *ObjBuffer) writeGroup(w io.Writer, g Group) error {
 	var err error
 	_, err = io.WriteString(w, fmt.Sprintf("g %s\n", g.Name))
 	if err != nil {

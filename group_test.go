@@ -7,9 +7,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func createFace(material string, cornerIdx ...int) face {
-	f := face{}
-	f.Corners = make([]faceCorner, len(cornerIdx))
+func createFace(material string, cornerIdx ...int) Face {
+	f := Face{}
+	f.Corners = make([]FaceCorner, len(cornerIdx))
 	for i := 0; i < len(cornerIdx); i++ {
 		f.Corners[i].VertexIndex = cornerIdx[i]
 		f.Corners[i].NormalIndex = cornerIdx[i]
@@ -20,7 +20,7 @@ func createFace(material string, cornerIdx ...int) face {
 
 func TestGroup_BuildFormats_EmptyGroup_ReturnsEmptyBuffer(t *testing.T) {
 	// Arrange
-	g := group{}
+	g := Group{}
 	origBuffer := ObjBuffer{}
 	origBuffer.MTL = "materials.mtl"
 
@@ -36,13 +36,13 @@ func TestGroup_BuildFormats_EmptyGroup_ReturnsEmptyBuffer(t *testing.T) {
 
 func TestGroup_BuildFormats_SingleGroupWithSingleFace_ReturnsCorrect(t *testing.T) {
 	// Arrange
-	g := group{}
+	g := Group{}
 	g.FirstFaceIndex = 0
 	g.FaceCount = 1
 
 	origBuffer := ObjBuffer{}
-	origBuffer.G = []group{g}
-	origBuffer.F = []face{
+	origBuffer.G = []Group{g}
+	origBuffer.F = []Face{
 		createFace("mat", 0, 1, 2),
 	}
 	origBuffer.V = []vec3.T{
@@ -69,7 +69,7 @@ func TestGroup_BuildFormats_SingleGroupWithSingleFace_ReturnsCorrect(t *testing.
 func TestGroup_BuildFormats_TwoGroupsWithTwoFaces_ReturnsCorrectGroups(t *testing.T) {
 	// Arrange
 	origBuffer := ObjBuffer{}
-	origBuffer.F = []face{
+	origBuffer.F = []Face{
 		// Group 1
 		createFace("mat1", 0, 2, 4),
 		createFace("mat2", 4, 2, 6),
@@ -98,9 +98,9 @@ func TestGroup_BuildFormats_TwoGroupsWithTwoFaces_ReturnsCorrectGroups(t *testin
 		{-7, -7, -7},
 	}
 
-	g1 := group{Name: "Group 1", FirstFaceIndex: 0, FaceCount: 2}
-	g2 := group{Name: "Group 2", FirstFaceIndex: 2, FaceCount: 2}
-	origBuffer.G = []group{g1, g2}
+	g1 := Group{Name: "Group 1", FirstFaceIndex: 0, FaceCount: 2}
+	g2 := Group{Name: "Group 2", FirstFaceIndex: 2, FaceCount: 2}
+	origBuffer.G = []Group{g1, g2}
 
 	// Act
 	buffer := g1.buildBuffers(&origBuffer)
@@ -118,7 +118,7 @@ func TestGroup_BuildFormats_TwoGroupsWithTwoFaces_ReturnsCorrectGroups(t *testin
 		buffer.VN)
 	assert.Equal(t, 1, len(buffer.G))
 	assert.Equal(t,
-		group{Name: "Group 1", FirstFaceIndex: 0, FaceCount: 2},
+		Group{Name: "Group 1", FirstFaceIndex: 0, FaceCount: 2},
 		buffer.G[0])
 	assert.Equal(t, 2, len(buffer.F))
 	assert.Equal(t, "mat1", buffer.F[0].Material)
@@ -128,7 +128,7 @@ func TestGroup_BuildFormats_TwoGroupsWithTwoFaces_ReturnsCorrectGroups(t *testin
 func TestGroup_BuildFormats_GroupWithTwoFacesets_ReturnsCorrectSubset(t *testing.T) {
 	// Arrange
 	origBuffer := ObjBuffer{}
-	origBuffer.F = []face{
+	origBuffer.F = []Face{
 		// Group 1
 		createFace("Material 1", 0, 2, 4),
 		createFace("Material 1", 4, 2, 6),
@@ -159,9 +159,9 @@ func TestGroup_BuildFormats_GroupWithTwoFacesets_ReturnsCorrectSubset(t *testing
 		{-7, -7, -7},
 	}
 
-	g1 := group{Name: "Group 1", FirstFaceIndex: 0, FaceCount: 4}
-	g2 := group{Name: "Group 2", FirstFaceIndex: 4, FaceCount: 2}
-	origBuffer.G = []group{g1, g2}
+	g1 := Group{Name: "Group 1", FirstFaceIndex: 0, FaceCount: 4}
+	g2 := Group{Name: "Group 2", FirstFaceIndex: 4, FaceCount: 2}
+	origBuffer.G = []Group{g1, g2}
 
 	// Act
 	buffer := g2.buildBuffers(&origBuffer)
@@ -177,9 +177,9 @@ func TestGroup_BuildFormats_GroupWithTwoFacesets_ReturnsCorrectSubset(t *testing
 			{-5, -5, -5}, {-7, -7, -7}, {-2, -2, -2}, {-4, -4, -4},
 		},
 		buffer.VN)
-	assert.EqualValues(t, []face{
+	assert.EqualValues(t, []Face{
 		createFace("Material 3", 0, 1, 2), // Remapped indices
 		createFace("Material 3", 1, 0, 3), // Remapped indices
 	}, buffer.F)
-	assert.EqualValues(t, []group{{"Group 2", 0, 2}}, buffer.G)
+	assert.EqualValues(t, []Group{{"Group 2", 0, 2}}, buffer.G)
 }

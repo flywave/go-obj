@@ -6,21 +6,21 @@ func FillIntSlice(slice []int, val int) {
 	}
 }
 
-type faceGroup struct {
+type FaceGroup struct {
 	Offset int
 	Size   int
 }
 
-type group struct {
+type Group struct {
 	Name           string
 	FirstFaceIndex int
 	FaceCount      int
 }
 
-func (g *group) buildBuffers(parentBuffer *ObjBuffer) *ObjBuffer {
+func (g *Group) buildBuffers(parentBuffer *ObjBuffer) *ObjBuffer {
 	buffer := new(ObjBuffer)
 	buffer.MTL = parentBuffer.MTL
-	buffer.G = []group{
+	buffer.G = []Group{
 		{
 			Name:      g.Name,
 			FaceCount: g.FaceCount,
@@ -36,8 +36,8 @@ func (g *group) buildBuffers(parentBuffer *ObjBuffer) *ObjBuffer {
 
 		originalFace := parentBuffer.F[i]
 
-		f := face{Material: originalFace.Material}
-		f.Corners = make([]faceCorner, len(originalFace.Corners))
+		f := Face{Material: originalFace.Material}
+		f.Corners = make([]FaceCorner, len(originalFace.Corners))
 
 		for j, origCorner := range originalFace.Corners {
 			origVertIdx := origCorner.VertexIndex

@@ -33,8 +33,8 @@ func TestObjReader_ProcessMaterialLibrary_AlreadySet_ReturnsError(t *testing.T) 
 func TestObjReader_ProcessGroup_ValidLine_EndsAndStartsGroup(t *testing.T) {
 	// Arrange
 	loader := ObjReader{}
-	loader.F = []face{{}}
-	loader.G = append(loader.G, group{FirstFaceIndex: 0, FaceCount: -1})
+	loader.F = []Face{{}}
+	loader.G = append(loader.G, Group{FirstFaceIndex: 0, FaceCount: -1})
 
 	// Act
 	err := loader.processGroup("g   group")
@@ -55,7 +55,7 @@ func TestObjReader_ProcessGroup_InvalidLine_ReturnsError(t *testing.T) {
 func TestObjReader_ProcessUseMaterial_ValidLine_SetsActiveMaterial(t *testing.T) {
 	// Arrange
 	loader := ObjReader{}
-	loader.F = []face{{}}
+	loader.F = []Face{{}}
 
 	// Act
 	err := loader.processUseMaterial("usemtl       material_name")
@@ -311,7 +311,7 @@ func TestObjReader_EndGroup_NoGroups_DoesNotPanic(t *testing.T) {
 func TestObjReader_EndGroup_GroupStarted_UpdatesFaceCount(t *testing.T) {
 	// Arrange
 	loader := ObjReader{}
-	loader.G = append(loader.G, group{
+	loader.G = append(loader.G, Group{
 		Name:           "Test",
 		FirstFaceIndex: 0,
 		FaceCount:      -1,
@@ -322,7 +322,7 @@ func TestObjReader_EndGroup_GroupStarted_UpdatesFaceCount(t *testing.T) {
 	loader.endGroup()
 
 	// Assert
-	assert.Equal(t, []group{{"Test", 0, 1}}, loader.G)
+	assert.Equal(t, []Group{{"Test", 0, 1}}, loader.G)
 }
 
 func TestObjReader_ProcessFace_UsesActiveMaterial(t *testing.T) {
@@ -342,7 +342,7 @@ func TestObjReader_ProcessFace_UsesActiveMaterial(t *testing.T) {
 func TestObjReader_EndGroup_EmptyGroup_DiscardsLast(t *testing.T) {
 	// Arrange
 	loader := ObjReader{}
-	origGroups := []group{{Name: "first"}}
+	origGroups := []Group{{Name: "first"}}
 	loader.G = origGroups
 
 	// Act

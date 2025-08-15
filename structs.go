@@ -18,19 +18,19 @@ func (e lineError) Error() string {
 	return fmt.Sprintf("Line #%d: %v ('%s')", e.lineNumber, e.line, e.err)
 }
 
-type faceCorner struct {
+type FaceCorner struct {
 	VertexIndex   int
 	NormalIndex   int
 	TexCoordIndex int
 }
 
-type line struct {
+type Line struct {
 	Corners  []int
 	Material string
 }
 
-type face struct {
-	Corners  []faceCorner
+type Face struct {
+	Corners  []FaceCorner
 	Material string
 }
 
@@ -50,17 +50,17 @@ func pnpoly(nvert int, vertx, verty []float32, testx, testy float32) bool {
 	return c
 }
 
-func (f *face) Triangulate(V []vec3.T) [][]faceCorner {
+func (f *Face) Triangulate(V []vec3.T) [][]FaceCorner {
 	npolys := len(f.Corners)
 	if npolys == 3 {
-		return [][]faceCorner{f.Corners}
+		return [][]FaceCorner{f.Corners}
 	}
 
 	axes := [2]int{1, 2}
 	faces := f.Corners
 
-	var ret [][]faceCorner
-	var i1 faceCorner
+	var ret [][]FaceCorner
+	var i1 FaceCorner
 	i0, i2 := faces[0], faces[1]
 
 	for k := 0; k < npolys; k++ {
@@ -127,7 +127,7 @@ func (f *face) Triangulate(V []vec3.T) [][]faceCorner {
 
 	remainingFace := faces
 	guessVert := 0
-	var ind [3]faceCorner
+	var ind [3]FaceCorner
 	var vx [3]float32
 	var vy [3]float32
 
@@ -186,7 +186,7 @@ func (f *face) Triangulate(V []vec3.T) [][]faceCorner {
 			continue
 		}
 
-		var idx0, idx1, idx2 faceCorner
+		var idx0, idx1, idx2 FaceCorner
 		idx0.VertexIndex = ind[0].VertexIndex
 		idx0.NormalIndex = ind[0].NormalIndex
 		idx0.TexCoordIndex = ind[0].TexCoordIndex
@@ -197,7 +197,7 @@ func (f *face) Triangulate(V []vec3.T) [][]faceCorner {
 		idx2.NormalIndex = ind[2].NormalIndex
 		idx2.TexCoordIndex = ind[2].TexCoordIndex
 
-		ret = append(ret, []faceCorner{idx0, idx1, idx2})
+		ret = append(ret, []FaceCorner{idx0, idx1, idx2})
 
 		removedVertIndex := (guessVert + 1) % npolys
 		for removedVertIndex+1 < npolys {
@@ -213,7 +213,7 @@ func (f *face) Triangulate(V []vec3.T) [][]faceCorner {
 		i1 = remainingFace[1]
 		i2 = remainingFace[2]
 
-		var idx0, idx1, idx2 faceCorner
+		var idx0, idx1, idx2 FaceCorner
 		idx0.VertexIndex = i0.VertexIndex
 		idx0.NormalIndex = i0.NormalIndex
 		idx0.TexCoordIndex = i0.TexCoordIndex
@@ -224,7 +224,7 @@ func (f *face) Triangulate(V []vec3.T) [][]faceCorner {
 		idx2.NormalIndex = i2.NormalIndex
 		idx2.TexCoordIndex = i2.TexCoordIndex
 
-		ret = append(ret, []faceCorner{idx0, idx1, idx2})
+		ret = append(ret, []FaceCorner{idx0, idx1, idx2})
 	}
 	return ret
 }
@@ -236,10 +236,10 @@ type ObjBuffer struct {
 	V         []vec3.T
 	VN        []vec3.T
 	VT        []vec2.T
-	F         []face
-	L         []line
-	G         []group
-	FaceGroup []*faceGroup
+	F         []Face
+	L         []Line
+	G         []Group
+	FaceGroup []*FaceGroup
 }
 
 func (b *ObjBuffer) BoundingBox() vec3.Box {
