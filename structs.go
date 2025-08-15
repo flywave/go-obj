@@ -21,7 +21,7 @@ func (e lineError) Error() string {
 type faceCorner struct {
 	VertexIndex   int
 	NormalIndex   int
-	TexcoordIndex int
+	TexCoordIndex int
 }
 
 type line struct {
@@ -109,10 +109,10 @@ func (f *face) Triangulate(V []vec3.T) [][]faceCorner {
 
 	area := float32(0)
 	for k := 0; k < npolys; k++ {
-		i0 := faces[(k+0)%npolys]
-		i1 := faces[(k+1)%npolys]
-		vi0 := i0.VertexIndex
-		vi1 := i1.VertexIndex
+		ii0 := faces[(k+0)%npolys]
+		ii1 := faces[(k+1)%npolys]
+		vi0 := ii0.VertexIndex
+		vi1 := ii1.VertexIndex
 		if vi0+axes[0] >= len(V) || vi0+axes[1] >= len(V) || vi1+axes[0] >= len(V) || vi1+axes[1] >= len(V) {
 			continue
 		}
@@ -189,13 +189,13 @@ func (f *face) Triangulate(V []vec3.T) [][]faceCorner {
 		var idx0, idx1, idx2 faceCorner
 		idx0.VertexIndex = ind[0].VertexIndex
 		idx0.NormalIndex = ind[0].NormalIndex
-		idx0.TexcoordIndex = ind[0].TexcoordIndex
+		idx0.TexCoordIndex = ind[0].TexCoordIndex
 		idx1.VertexIndex = ind[1].VertexIndex
 		idx1.NormalIndex = ind[1].NormalIndex
-		idx1.TexcoordIndex = ind[1].TexcoordIndex
+		idx1.TexCoordIndex = ind[1].TexCoordIndex
 		idx2.VertexIndex = ind[2].VertexIndex
 		idx2.NormalIndex = ind[2].NormalIndex
-		idx2.TexcoordIndex = ind[2].TexcoordIndex
+		idx2.TexCoordIndex = ind[2].TexCoordIndex
 
 		ret = append(ret, []faceCorner{idx0, idx1, idx2})
 
@@ -216,13 +216,13 @@ func (f *face) Triangulate(V []vec3.T) [][]faceCorner {
 		var idx0, idx1, idx2 faceCorner
 		idx0.VertexIndex = i0.VertexIndex
 		idx0.NormalIndex = i0.NormalIndex
-		idx0.TexcoordIndex = i0.TexcoordIndex
+		idx0.TexCoordIndex = i0.TexCoordIndex
 		idx1.VertexIndex = i1.VertexIndex
 		idx1.NormalIndex = i1.NormalIndex
-		idx1.TexcoordIndex = i1.TexcoordIndex
+		idx1.TexCoordIndex = i1.TexCoordIndex
 		idx2.VertexIndex = i2.VertexIndex
 		idx2.NormalIndex = i2.NormalIndex
-		idx2.TexcoordIndex = i2.TexcoordIndex
+		idx2.TexCoordIndex = i2.TexCoordIndex
 
 		ret = append(ret, []faceCorner{idx0, idx1, idx2})
 	}
@@ -243,9 +243,9 @@ type ObjBuffer struct {
 }
 
 func (b *ObjBuffer) BoundingBox() vec3.Box {
-	box := vec3.Box{vec3.MaxVal, vec3.MinVal}
+	box := vec3.Box{Min: vec3.MaxVal, Max: vec3.MinVal}
 	for _, v := range b.V {
-		box.Join(&vec3.Box{v, v})
+		box.Join(&vec3.Box{Min: v, Max: v})
 	}
 	return box
 }

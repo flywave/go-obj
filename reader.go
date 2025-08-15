@@ -91,10 +91,9 @@ func (l *ObjReader) Read(reader io.Reader) error {
 		case "o":
 		case "s":
 		case "vp":
-			break
 
 		default:
-			err = fmt.Errorf("Unknown keyword '%s'", fields[0])
+			err = fmt.Errorf("unknown keyword '%s'", fields[0])
 		}
 
 		if err != nil {
@@ -114,7 +113,7 @@ func (l *ObjReader) Read(reader io.Reader) error {
 
 func (l *ObjReader) processVertex(fields []string) error {
 	if len(fields) != 3 && len(fields) != 4 {
-		return fmt.Errorf("Expected 3 or 4 fields, but got %d", len(fields))
+		return fmt.Errorf("expected 3 or 4 fields, but got %d", len(fields))
 	}
 	x, errX := strconv.ParseFloat(fields[0], 32)
 	y, errY := strconv.ParseFloat(fields[1], 32)
@@ -128,7 +127,7 @@ func (l *ObjReader) processVertex(fields []string) error {
 
 func (l *ObjReader) processVertexTexCoord(fields []string) error {
 	if len(fields) < 2 {
-		return fmt.Errorf("Expected 2 fields, but got %d", len(fields))
+		return fmt.Errorf("expected 2 fields, but got %d", len(fields))
 	}
 	s, errS := strconv.ParseFloat(fields[0], 32)
 	t, errT := strconv.ParseFloat(fields[1], 32)
@@ -141,7 +140,7 @@ func (l *ObjReader) processVertexTexCoord(fields []string) error {
 
 func (l *ObjReader) processVertexNormal(fields []string) error {
 	if len(fields) != 3 {
-		return fmt.Errorf("Expected 3 fields, but got %d", len(fields))
+		return fmt.Errorf("expected 3 fields, but got %d", len(fields))
 	}
 	x, errX := strconv.ParseFloat(fields[0], 32)
 	y, errY := strconv.ParseFloat(fields[1], 32)
@@ -171,7 +170,7 @@ func parseFaceField(field string) (faceCorner, error) {
 		n, errT := strconv.Atoi(match[2])
 		return faceCorner{v - 1, n - 1, -1}, FirstError(errV, errT)
 	} else {
-		return faceCorner{-1, -1, -1}, fmt.Errorf("Face field '%s' is not on a supported format", field)
+		return faceCorner{-1, -1, -1}, fmt.Errorf("face field '%s' is not on a supported format", field)
 	}
 }
 
@@ -191,7 +190,7 @@ func (l *ObjReader) isFaceAccepted(f *face) bool {
 
 func (l *ObjReader) processLine(fields []string) error {
 	if len(fields) < 2 {
-		return fmt.Errorf("Expected %d fields, but got %d", 2, len(fields))
+		return fmt.Errorf("expected %d fields, but got %d", 2, len(fields))
 	}
 	ll := line{make([]int, len(fields)), l.activeMaterial}
 	for i, field := range fields {
@@ -207,7 +206,7 @@ func (l *ObjReader) processLine(fields []string) error {
 
 func (l *ObjReader) processFace(fields []string) error {
 	if len(fields) < 3 {
-		return fmt.Errorf("Expected %d fields, but got %d", 3, len(fields))
+		return fmt.Errorf("expected %d fields, but got %d", 3, len(fields))
 	}
 
 	f := face{make([]faceCorner, len(fields)), l.activeMaterial}
@@ -230,18 +229,18 @@ func (l *ObjReader) processGroup(line string) error {
 		l.startGroup(match[1])
 		return nil
 	}
-	return fmt.Errorf("Could not parse group")
+	return fmt.Errorf("could not parse group")
 }
 
 func (l *ObjReader) processMaterialLibrary(line string) error {
 	if l.MTL != "" {
-		return fmt.Errorf("Material library already set")
+		return fmt.Errorf("material library already set")
 	}
 	if match := mtllibRegex.FindStringSubmatch(line); match != nil {
 		l.MTL = match[1]
 		return nil
 	}
-	return fmt.Errorf("Could not parse 'mtllib'-line")
+	return fmt.Errorf("could not parse 'mtllib'-line")
 }
 
 func (l *ObjReader) processUseMaterial(line string) error {
@@ -249,7 +248,7 @@ func (l *ObjReader) processUseMaterial(line string) error {
 		l.activeMaterial = match[1]
 		return nil
 	}
-	return fmt.Errorf("Could not parse 'usemtl'-line")
+	return fmt.Errorf("could not parse 'usemtl'-line")
 }
 
 func (l *ObjReader) startGroup(name string) {
@@ -261,7 +260,7 @@ func (l *ObjReader) startGroup(name string) {
 	l.G = append(l.G, g)
 }
 
-func (l *ObjReader) isGroupAccepted(f *face) bool {
+func (l *ObjReader) IsGroupAccepted(f *face) bool {
 	if l.options.DiscardDegeneratedFaces {
 		occurences := make(map[int]bool, len(f.Corners))
 		for _, c := range f.Corners {

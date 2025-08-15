@@ -334,13 +334,13 @@ func WriteMaterials(filename string, mtls map[string]*Material) error {
 				return err
 			}
 		}
-		if k.Shininess != math.NaN() {
+		if !math.IsNaN(k.Shininess) {
 			_, err = buff.WriteString(fmt.Sprintf("Ns %g\n", k.Shininess))
 			if err != nil {
 				return err
 			}
 		}
-		if k.Opacity != math.NaN() {
+		if !math.IsNaN(k.Opacity) {
 			_, err = buff.WriteString(fmt.Sprintf("d %g\n", k.Opacity))
 			if err != nil {
 				return err

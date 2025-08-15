@@ -21,7 +21,7 @@ func (g *group) buildBuffers(parentBuffer *ObjBuffer) *ObjBuffer {
 	buffer := new(ObjBuffer)
 	buffer.MTL = parentBuffer.MTL
 	buffer.G = []group{
-		group{
+		{
 			Name:      g.Name,
 			FaceCount: g.FaceCount,
 		},

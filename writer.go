@@ -63,16 +63,16 @@ func writeFace(w io.Writer, f face) error {
 
 	for _, c := range f.Corners {
 		if c.NormalIndex != -1 {
-			if c.TexcoordIndex != -1 {
+			if c.TexCoordIndex != -1 {
 				_, err = io.WriteString(w,
-					fmt.Sprintf(" %d/%d/%d", c.VertexIndex+1, c.TexcoordIndex+1, c.NormalIndex+1))
+					fmt.Sprintf(" %d/%d/%d", c.VertexIndex+1, c.TexCoordIndex+1, c.NormalIndex+1))
 			} else {
 				_, err = io.WriteString(w,
 					fmt.Sprintf(" %d//%d", c.VertexIndex+1, c.NormalIndex+1))
 			}
-		} else if c.TexcoordIndex != -1 {
+		} else if c.TexCoordIndex != -1 {
 			_, err = io.WriteString(w,
-				fmt.Sprintf(" %d/%d", c.VertexIndex+1, c.TexcoordIndex+1))
+				fmt.Sprintf(" %d/%d", c.VertexIndex+1, c.TexCoordIndex+1))
 		} else {
 			_, err = io.WriteString(w, fmt.Sprintf(" %d", c.VertexIndex+1))
 		}

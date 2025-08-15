@@ -3,8 +3,8 @@ package obj
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/flywave/go3d/vec3"
+	"github.com/stretchr/testify/assert"
 )
 
 func createFace(material string, cornerIdx ...int) face {
@@ -46,14 +46,14 @@ func TestGroup_BuildFormats_SingleGroupWithSingleFace_ReturnsCorrect(t *testing.
 		createFace("mat", 0, 1, 2),
 	}
 	origBuffer.V = []vec3.T{
-		vec3.T{0, 0, 0},
-		vec3.T{1, 1, 1},
-		vec3.T{2, 2, 2},
+		{0, 0, 0},
+		{1, 1, 1},
+		{2, 2, 2},
 	}
 	origBuffer.VN = []vec3.T{
-		vec3.T{0, 0, 0},
-		vec3.T{-1, -1, -1},
-		vec3.T{-2, -2, -2},
+		{0, 0, 0},
+		{-1, -1, -1},
+		{-2, -2, -2},
 	}
 
 	// Act
@@ -78,24 +78,24 @@ func TestGroup_BuildFormats_TwoGroupsWithTwoFaces_ReturnsCorrectGroups(t *testin
 		createFace("mat2", 5, 3, 7),
 	}
 	origBuffer.V = []vec3.T{
-		vec3.T{0, 0, 0},
-		vec3.T{1, 1, 1},
-		vec3.T{2, 2, 2},
-		vec3.T{3, 3, 3},
-		vec3.T{4, 4, 4},
-		vec3.T{5, 5, 5},
-		vec3.T{6, 6, 6},
-		vec3.T{7, 7, 7},
+		{0, 0, 0},
+		{1, 1, 1},
+		{2, 2, 2},
+		{3, 3, 3},
+		{4, 4, 4},
+		{5, 5, 5},
+		{6, 6, 6},
+		{7, 7, 7},
 	}
 	origBuffer.VN = []vec3.T{
-		vec3.T{0, 0, 0},
-		vec3.T{-1, -1, -1},
-		vec3.T{-2, -2, -2},
-		vec3.T{-3, -3, -3},
-		vec3.T{-4, -4, -4},
-		vec3.T{-5, -5, -5},
-		vec3.T{-6, -6, -6},
-		vec3.T{-7, -7, -7},
+		{0, 0, 0},
+		{-1, -1, -1},
+		{-2, -2, -2},
+		{-3, -3, -3},
+		{-4, -4, -4},
+		{-5, -5, -5},
+		{-6, -6, -6},
+		{-7, -7, -7},
 	}
 
 	g1 := group{Name: "Group 1", FirstFaceIndex: 0, FaceCount: 2}
@@ -108,12 +108,12 @@ func TestGroup_BuildFormats_TwoGroupsWithTwoFaces_ReturnsCorrectGroups(t *testin
 	// Assert
 	assert.EqualValues(t,
 		[]vec3.T{
-			vec3.T{0, 0, 0}, vec3.T{2, 2, 2}, vec3.T{4, 4, 4}, vec3.T{6, 6, 6},
+			{0, 0, 0}, {2, 2, 2}, {4, 4, 4}, {6, 6, 6},
 		},
 		buffer.V)
 	assert.EqualValues(t,
 		[]vec3.T{
-			vec3.T{0, 0, 0}, vec3.T{-2, -2, -2}, vec3.T{-4, -4, -4}, vec3.T{-6, -6, -6},
+			{0, 0, 0}, {-2, -2, -2}, {-4, -4, -4}, {-6, -6, -6},
 		},
 		buffer.VN)
 	assert.Equal(t, 1, len(buffer.G))
@@ -139,24 +139,24 @@ func TestGroup_BuildFormats_GroupWithTwoFacesets_ReturnsCorrectSubset(t *testing
 		createFace("Material 3", 7, 5, 4),
 	}
 	origBuffer.V = []vec3.T{
-		vec3.T{0, 0, 0},
-		vec3.T{1, 1, 1},
-		vec3.T{2, 2, 2},
-		vec3.T{3, 3, 3},
-		vec3.T{4, 4, 4},
-		vec3.T{5, 5, 5},
-		vec3.T{6, 6, 6},
-		vec3.T{7, 7, 7},
+		{0, 0, 0},
+		{1, 1, 1},
+		{2, 2, 2},
+		{3, 3, 3},
+		{4, 4, 4},
+		{5, 5, 5},
+		{6, 6, 6},
+		{7, 7, 7},
 	}
 	origBuffer.VN = []vec3.T{
-		vec3.T{0, 0, 0},
-		vec3.T{-1, -1, -1},
-		vec3.T{-2, -2, -2},
-		vec3.T{-3, -3, -3},
-		vec3.T{-4, -4, -4},
-		vec3.T{-5, -5, -5},
-		vec3.T{-6, -6, -6},
-		vec3.T{-7, -7, -7},
+		{0, 0, 0},
+		{-1, -1, -1},
+		{-2, -2, -2},
+		{-3, -3, -3},
+		{-4, -4, -4},
+		{-5, -5, -5},
+		{-6, -6, -6},
+		{-7, -7, -7},
 	}
 
 	g1 := group{Name: "Group 1", FirstFaceIndex: 0, FaceCount: 4}
@@ -169,17 +169,17 @@ func TestGroup_BuildFormats_GroupWithTwoFacesets_ReturnsCorrectSubset(t *testing
 	// Assert
 	assert.EqualValues(t,
 		[]vec3.T{
-			vec3.T{5, 5, 5}, vec3.T{7, 7, 7}, vec3.T{2, 2, 2}, vec3.T{4, 4, 4},
+			{5, 5, 5}, {7, 7, 7}, {2, 2, 2}, {4, 4, 4},
 		},
 		buffer.V)
 	assert.EqualValues(t,
 		[]vec3.T{
-			vec3.T{-5, -5, -5}, vec3.T{-7, -7, -7}, vec3.T{-2, -2, -2}, vec3.T{-4, -4, -4},
+			{-5, -5, -5}, {-7, -7, -7}, {-2, -2, -2}, {-4, -4, -4},
 		},
 		buffer.VN)
 	assert.EqualValues(t, []face{
 		createFace("Material 3", 0, 1, 2), // Remapped indices
 		createFace("Material 3", 1, 0, 3), // Remapped indices
 	}, buffer.F)
-	assert.EqualValues(t, []group{group{"Group 2", 0, 2}}, buffer.G)
+	assert.EqualValues(t, []group{{"Group 2", 0, 2}}, buffer.G)
 }
